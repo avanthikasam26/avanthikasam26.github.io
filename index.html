@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Avanthika N — AI & Data Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #060810;
+  --bg2: #0d1117;
+  --bg3: #141922;
+  --surface: #1a2235;
+  --border: rgba(99,179,237,0.12);
+  --accent: #63b3ed;
+  --accent2: #81e6d9;
+  --accent3: #f6ad55;
+  --text: #e8edf5;
+  --muted: #8899b0;
+  --card-bg: rgba(26,34,53,0.7);
+  --glow: rgba(99,179,237,0.15);
+}
+[data-theme="light"] {
+  --bg: #f0f4ff;
+  --bg2: #e8eef8;
+  --bg3: #dde6f5;
+  --surface: #ffffff;
+  --border: rgba(60,120,200,0.15);
+  --accent: #2563eb;
+  --accent2: #0d9488;
+  --accent3: #d97706;
+  --text: #0f1724;
+  --muted: #4a6080;
+  --card-bg: rgba(255,255,255,0.85);
+  --glow: rgba(37,99,235,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;backdrop-filter:blur(18px);background:rgba(6,8,16,0.75);border-bottom:0.5px solid var(--border);}
+[data-theme="light"] nav{background:rgba(240,244,255,0.85);}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);letter-spacing:-0.5px;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:0.82rem;color:var(--muted);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:var(--accent);}
+.theme-toggle{background:none;border:0.5px solid var(--border);color:var(--muted);padding:0.4rem 0.9rem;border-radius:2rem;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;}
+#particle-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-content{position:relative;z-index:2;max-width:700px;padding:0 3rem;}
+.hero-tag{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--accent2);letter-spacing:0.15em;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.hero-tag::before{content:'';display:inline-block;width:2rem;height:1px;background:var(--accent2);}
+h1.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.2rem,6vw,5.5rem);line-height:1.0;letter-spacing:-2px;color:var(--text);margin-bottom:0.5rem;white-space:nowrap;}
+h1.hero-name span{color:var(--accent);}
+.hero-sub{font-family:'Syne',sans-serif;font-weight:400;font-size:clamp(1rem,2.5vw,1.4rem);color:var(--muted);margin-bottom:1.5rem;}
+.hero-bio{font-size:1rem;color:var(--muted);max-width:520px;margin-bottom:2.5rem;line-height:1.8;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{background:var(--accent);color:#060810;padding:0.75rem 2rem;border-radius:2rem;font-weight:500;font-size:0.9rem;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,179,237,0.3);}
+.btn-outline{border:0.5px solid var(--border);color:var(--text);padding:0.75rem 2rem;border-radius:2rem;font-weight:400;font-size:0.9rem;text-decoration:none;transition:all 0.2s;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;}
+.stat{text-align:left;}
+.stat-num{font-family:'Syne',sans-serif;font-weight:700;font-size:1.8rem;color:var(--accent);}
+.stat-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.7rem;letter-spacing:0.1em;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent);}
+
+/* SECTIONS */
+section{padding:6rem 3rem;max-width:1100px;margin:0 auto;}
+.section-tag{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent2);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+.section-tag::before{content:'';display:inline-block;width:1.5rem;height:1px;background:var(--accent2);}
+h2.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-1px;margin-bottom:3rem;color:var(--text);}
+.divider{width:100%;height:0.5px;background:var(--border);margin:0;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.about-text p{color:var(--muted);margin-bottom:1rem;line-height:1.9;}
+.about-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
+.pill{background:var(--card-bg);border:0.5px solid var(--border);color:var(--accent2);font-size:0.75rem;padding:0.35rem 0.9rem;border-radius:2rem;font-family:'Space Mono',monospace;}
+.about-right{}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:0.5px solid var(--border);font-size:0.88rem;}
+.info-label{color:var(--muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;}
+.info-val{color:var(--text);font-weight:500;}
+.info-val a{color:var(--accent);text-decoration:none;}
+
+/* SKILLS */
+.skills-section{}
+.skills-intro{color:var(--muted);margin-bottom:2.5rem;max-width:500px;}
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+.skill-cat{background:var(--card-bg);border:0.5px solid var(--border);border-radius:1rem;padding:1.25rem;backdrop-filter:blur(8px);}
+.skill-cat-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem;}
+.skill-bar-row{margin-bottom:0.7rem;}
+.skill-bar-label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:0.3rem;}
+.skill-bar-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.skill-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.radar-wrap{display:flex;justify-content:center;margin-top:1rem;}
+
+/* EXPERIENCE */
+.exp-list{display:flex;flex-direction:column;gap:0;}
+.exp-item{display:grid;grid-template-columns:160px 1fr;gap:2rem;padding:2rem 0;border-bottom:0.5px solid var(--border);}
+.exp-date{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent3);padding-top:0.3rem;}
+.exp-role{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);}
+.exp-company{font-size:0.85rem;color:var(--accent);margin:0.2rem 0 0.75rem;}
+.exp-points{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+.exp-points li{font-size:0.88rem;color:var(--muted);padding-left:1rem;position:relative;}
+.exp-points li::before{content:'▸';position:absolute;left:0;color:var(--accent2);}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;}
+.proj-card{background:var(--card-bg);border:0.5px solid var(--border);border-radius:1rem;padding:1.5rem;backdrop-filter:blur(8px);transition:all 0.25s;position:relative;overflow:hidden;}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:opacity 0.25s;}
+.proj-card:hover{border-color:rgba(99,179,237,0.3);transform:translateY(-4px);box-shadow:0 16px 40px var(--glow);}
+.proj-card:hover::before{opacity:1;}
+.proj-icon{font-size:1.5rem;margin-bottom:1rem;}
+.proj-title{font-family:'Syne',sans-serif;font-weight:600;font-size:1rem;color:var(--text);margin-bottom:0.5rem;}
+.proj-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.proj-tag{background:rgba(99,179,237,0.08);border:0.5px solid rgba(99,179,237,0.2);color:var(--accent);font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:1rem;font-family:'Space Mono',monospace;}
+.proj-badge{position:absolute;top:1rem;right:1rem;font-size:0.65rem;background:rgba(246,173,85,0.15);border:0.5px solid rgba(246,173,85,0.3);color:var(--accent3);padding:0.2rem 0.6rem;border-radius:1rem;font-family:'Space Mono',monospace;}
+
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+.ach-card{background:var(--card-bg);border:0.5px solid var(--border);border-radius:1rem;padding:1.25rem;display:flex;align-items:flex-start;gap:1rem;backdrop-filter:blur(8px);}
+.ach-icon{font-size:1.4rem;min-width:2rem;}
+.ach-title{font-size:0.88rem;font-weight:500;color:var(--text);margin-bottom:0.25rem;}
+.ach-sub{font-size:0.78rem;color:var(--muted);}
+
+/* CERTS */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;}
+.cert-item{background:var(--card-bg);border:0.5px solid var(--border);border-radius:0.75rem;padding:1rem 1.25rem;font-size:0.85rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
+.cert-dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
+
+/* EDUCATION */
+.edu-list{display:flex;flex-direction:column;gap:0;}
+.edu-item{display:grid;grid-template-columns:160px 1fr;gap:2rem;padding:2rem 0;border-bottom:0.5px solid var(--border);}
+.edu-deg{font-family:'Syne',sans-serif;font-weight:600;font-size:1rem;color:var(--text);}
+.edu-inst{font-size:0.85rem;color:var(--accent);margin:0.25rem 0;}
+.edu-score{font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--accent2);}
+
+/* LEADERSHIP */
+.lead-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.lead-card{background:var(--card-bg);border:0.5px solid var(--border);border-radius:1rem;padding:1.25rem;}
+.lead-role{font-weight:500;font-size:0.9rem;color:var(--text);}
+.lead-org{font-size:0.8rem;color:var(--accent);margin:0.2rem 0;}
+.lead-year{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.contact-links{display:flex;flex-direction:column;gap:1rem;}
+.contact-link{display:flex;align-items:center;gap:1rem;color:var(--text);text-decoration:none;padding:1rem 1.25rem;background:var(--card-bg);border:0.5px solid var(--border);border-radius:0.75rem;transition:all 0.2s;}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);}
+.contact-link-icon{font-size:1.2rem;width:1.5rem;text-align:center;}
+.contact-link-text{font-size:0.9rem;}
+.contact-link-label{font-size:0.7rem;color:var(--muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:2rem 3rem;text-align:center;color:var(--muted);font-size:0.78rem;font-family:'Space Mono',monospace;}
+
+/* ANIMATIONS */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+.fade-in.visible{opacity:1;transform:none;}
+
+@media(max-width:768px){
+nav{padding:1rem 1.5rem;}
+.nav-links{display:none;}
+.hero-content{padding:0 1.5rem;}
+section{padding:4rem 1.5rem;}
+.about-grid,.contact-grid{grid-template-columns:1fr;}
+.exp-item,.edu-item{grid-template-columns:1fr;gap:0.5rem;}
+.exp-date{font-size:0.7rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AN</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="theme-toggle" onclick="toggleTheme()">☀ Light</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-tag">B.Tech — AI & Data Science</div>
+    <h1 class="hero-name">Avanthika <span>N.</span></h1>
+    <div class="hero-sub">AI Engineer · Data Scientist · Researcher</div>
+    <p class="hero-bio">Building intelligent systems at the intersection of AI, IoT, and human-centered design. Published IEEE researcher, hackathon winner, and passionate about privacy-first AI for real-world impact.</p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#contact">Get in touch</a>
+      <a class="btn-outline" href="#projects">View projects</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">8.65</div><div class="stat-label">CGPA</div></div>
+      <div class="stat"><div class="stat-num">3+</div><div class="stat-label">Internships</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">IEEE Paper</div></div>
+      <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Leadership roles</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-line"></div></div>
+</section>
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag">01 — About</div>
+  <h2 class="section-title">Who I am</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>I'm Avanthika N, a B.Tech student specializing in Artificial Intelligence & Data Science at National Engineering College, Tamil Nadu. I'm deeply passionate about building AI systems that are not just intelligent — but ethical, private, and human-centered.</p>
+      <p>From developing real-time cyber dashboards for the Thoothukudi District Police to publishing an IEEE paper on ML-based myopia prediction, I've consistently worked on projects that bridge research and real-world impact.</p>
+      <p>Beyond academics, I serve in multiple leadership roles — Joint Secretary of the AI & DS Association, Chief Editor of the AI Club, and Sports Captain — because I believe great engineers also lead, communicate, and inspire.</p>
+      <div class="about-pills">
+        <span class="pill">AI / ML</span>
+        <span class="pill">Digital Twins</span>
+        <span class="pill">Computer Vision</span>
+        <span class="pill">IoT Systems</span>
+        <span class="pill">NLP</span>
+        <span class="pill">Edge Computing</span>
+        <span class="pill">Healthcare AI</span>
+        
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="info-row"><span class="info-label">Email</span><span class="info-val"><a href="mailto:avanthikasamy6@gmail.com">avanthikasamy6@gmail.com</a></span></div>
+      <div class="info-row"><span class="info-label">College</span><span class="info-val">National Engineering College</span></div>
+      <div class="info-row"><span class="info-label">Degree</span><span class="info-val">B.Tech AI & DS</span></div>
+      <div class="info-row"><span class="info-label">CGPA</span><span class="info-val">8.65 / 10</span></div>
+      <div class="info-row"><span class="info-label">LinkedIn</span><span class="info-val"><a href="https://linkedin.com/in/avanthika-n" target="_blank">avanthika-n</a></span></div>
+      <div class="info-row"><span class="info-label">GitHub</span><span class="info-val"><a href="https://github.com/avanthikasam26" target="_blank">avanthikasam26</a></span></div>
+      <div class="info-row"><span class="info-label">Languages</span><span class="info-val">Tamil, English, Telugu, German</span></div>
+      <div class="info-row"><span class="info-label">Sports</span><span class="info-val">Volleyball · Table Tennis · Athletics</span></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-tag">02 — Education</div>
+  <h2 class="section-title">Academic background</h2>
+  <div class="edu-list fade-in">
+    <div class="edu-item">
+      <div><span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent3);">2023 – Present</span></div>
+      <div>
+        <div class="edu-deg">B.Tech — Artificial Intelligence & Data Science</div>
+        <div class="edu-inst">National Engineering College, Tamil Nadu, India</div>
+        <div class="edu-score">CGPA: 8.65 / 10</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div><span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent3);">Higher Secondary</span></div>
+      <div>
+        <div class="edu-deg">Higher Secondary Certificate</div>
+        <div class="edu-inst">Ravilla K.R.A Vidhyashram School</div>
+        <div class="edu-score">Percentage: 90%</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div><span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent3);">SSLC</span></div>
+      <div>
+        <div class="edu-deg">Secondary School Leaving Certificate</div>
+        <div class="edu-inst">Ravilla K.R.A Vidhyashram School</div>
+        <div class="edu-score">Percentage: 88%</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-tag">03 — Skills</div>
+  <h2 class="section-title">Technical expertise</h2>
+  <div class="skill-grid fade-in">
+    <div class="skill-cat">
+      <div class="skill-cat-label">Data Science</div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Pandas / NumPy</span><span>90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Matplotlib / Seaborn</span><span>85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Scikit-learn</span><span>82%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="82"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>SQL</span><span>78%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div></div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-cat-label">AI / ML</div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Machine Learning</span><span>88%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>NLP</span><span>80%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Computer Vision</span><span>78%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Deep Learning</span><span>72%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="72"></div></div></div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-cat-label">Dev & Tools</div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Python</span><span>90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>HTML / CSS / JS</span><span>82%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="82"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Node.js / MERN</span><span>70%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="70"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Figma / UI/UX</span><span>75%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="75"></div></div></div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-cat-label">IoT & Systems</div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>IoT / Sensors</span><span>80%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Digital Twins</span><span>78%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>Microcontrollers</span><span>72%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="72"></div></div></div>
+      <div class="skill-bar-row"><div class="skill-bar-label"><span>MATLAB</span><span>65%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="65"></div></div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-tag">04 — Experience</div>
+  <h2 class="section-title">Internships</h2>
+  <div class="exp-list fade-in">
+    <div class="exp-item">
+      <div class="exp-date">Sep – Nov 2025</div>
+      <div>
+        <div class="exp-role">Cyber Hackathon Intern</div>
+        <div class="exp-company">Thoothukudi District Police</div>
+        <ul class="exp-points">
+          <li>Co-developed Cyber-Vizhli, a real-time intelligent dashboard powered by live Excel data updates</li>
+          <li>Enabled quick alert tracking and rapid law enforcement response</li>
+          <li>Supported data-driven decision making at the district level</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">Sep – Nov 2025</div>
+      <div>
+        <div class="exp-role">Fullstack Web Development Intern</div>
+        <div class="exp-company">WSA</div>
+        <ul class="exp-points">
+          <li>Foundational programming with HTML, CSS, and JavaScript</li>
+          <li>SDLC-based project building using the MERN Stack</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">Nov 2024 – Mar 2025</div>
+      <div>
+        <div class="exp-role">AI & ML Intern</div>
+        <div class="exp-company">Shan AI Technologies Ltd</div>
+        <ul class="exp-points">
+          <li>Worked on real-world AI/ML projects from data collection to deployment</li>
+          <li>Trained and evaluated models, improving accuracy across multiple use cases</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">Completed</div>
+      <div>
+        <div class="exp-role">Industry Project — AI & IoT</div>
+        <ul class="exp-points">
+          <li>Developed Edge-Vision Health Index: a privacy-centric AI system for elderly behavioural monitoring</li>
+          <li>Converted video to anonymized health data using edge computing — zero cloud storage</li>
+          <li>Built a Home Care Quality Index tracking safety, nutrition, and mobility in real time</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-tag">05 — Projects</div>
+  <h2 class="section-title">What I've built</h2>
+  <div class="projects-grid fade-in">
+    <div class="proj-card">
+      <span class="proj-badge">Industry</span>
+      <div class="proj-icon">🏥</div>
+      <div class="proj-title">Edge-Vision Health Index</div>
+      <div class="proj-desc">Privacy-centric AI system for elderly behavioural monitoring using edge computing. Converts video to anonymized health data with zero cloud storage — 100% user privacy.</div>
+      <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Edge AI</span><span class="proj-tag">Computer Vision</span><span class="proj-tag">IoT</span></div>
+    </div>
+    <div class="proj-card">
+      <span class="proj-badge">Ongoing</span>
+      <div class="proj-icon">🩸</div>
+      <div class="proj-title">HemoTwin</div>
+      <div class="proj-desc">Digital Twin system for smart blood cold-chain monitoring. Uses thermal and inertial sensing to predict molecular decay with AR visualization.</div>
+      <div class="proj-tags"><span class="proj-tag">Digital Twins</span><span class="proj-tag">IoT</span><span class="proj-tag">ML</span><span class="proj-tag">AR</span></div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon">🤖</div>
+      <div class="proj-title">Socratic Tutor Bot</div>
+      <div class="proj-desc">AI learning assistant using the Socratic method — guides learners through adaptive questioning instead of direct answers to build critical thinking.</div>
+      <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">NLP</span><span class="proj-tag">ML</span><span class="proj-tag">Chatbot</span></div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon">📡</div>
+      <div class="proj-title">VI-TWIN</div>
+      <div class="proj-desc">Smart classroom monitoring system with touchless AI attendance, temperature tracking, Digital Twin data management, and a faculty dashboard.</div>
+      <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Computer Vision</span><span class="proj-tag">IoT</span><span class="proj-tag">ML</span></div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon">🌐</div>
+      <div class="proj-title">Cyber-Vizhli</div>
+      <div class="proj-desc">Real-time intelligent dashboard for Thoothukudi District Police. Powers live alert tracking from Excel data for data-driven law enforcement decisions.</div>
+      <div class="proj-tags"><span class="proj-tag">Dashboard</span><span class="proj-tag">Real-time</span><span class="proj-tag">Data Analytics</span></div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon">🎓</div>
+      <div class="proj-title">EduVerse</div>
+      <div class="proj-desc">Educational web platform guiding students on skills, careers, and job paths. Features an interactive, vibrant UI for high engagement.</div>
+      <div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span><span class="proj-tag">UI/UX</span></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="section-tag">06 — Research</div>
+  <h2 class="section-title">Publications</h2>
+  <div class="fade-in">
+    <div class="proj-card" style="max-width:680px;">
+      <span class="proj-badge">IEEE 2025</span>
+      <div class="proj-icon">📄</div>
+      <div class="proj-title">Dual ML Approach for Myopia Prediction in Children</div>
+      <div class="proj-desc">Using Bayesian Risk Assessment and Genomic Classification. Published at IEEE International Conference, Amrita Vishwa Vidyapeetham, November 2025.</div>
+      <div style="margin-top:1rem;"><a href="https://ieeexplore.ieee.org/document/11349059" target="_blank" style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--accent);text-decoration:none;border-bottom:0.5px solid var(--accent);padding-bottom:1px;">View on IEEE Xplore ↗</a></div>
+      <div class="proj-tags"><span class="proj-tag">IEEE</span><span class="proj-tag">Machine Learning</span><span class="proj-tag">Bayesian</span><span class="proj-tag">Healthcare AI</span></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-tag">07 — Achievements</div>
+  <h2 class="section-title">Recognition & Wins</h2>
+  <div class="ach-grid fade-in">
+    <div class="ach-card"><div class="ach-icon">🥇</div><div><div class="ach-title">1st Place — NEC SYNAPX'26 Ideathon</div><div class="ach-sub">Cash Prize Winner · National Engineering College</div></div></div>
+    <div class="ach-card"><div class="ach-icon">🥈</div><div><div class="ach-title">2nd Place — Hackfinity Hackathon</div><div class="ach-sub">Cash Prize · Ramco Institute of Technology</div></div></div>
+    <div class="ach-card"><div class="ach-icon">🚀</div><div><div class="ach-title">ISRO Bharatiya Antariksh Hackathon 2025</div><div class="ach-sub">Selected Participant</div></div></div>
+    <div class="ach-card"><div class="ach-icon">🇮🇳</div><div><div class="ach-title">Smart India Hackathon 2024 & 2025</div><div class="ach-sub">Qualified — National Level</div></div></div>
+    <div class="ach-card"><div class="ach-icon">📰</div><div><div class="ach-title">IEEE Publication</div><div class="ach-sub">Dual ML Approach for Myopia Prediction · 2025</div></div></div>
+    <div class="ach-card"><div class="ach-icon">🏐</div><div><div class="ach-title">Sports Captain — AI & DS Dept</div><div class="ach-sub">Volleyball · Table Tennis · Athletics</div></div></div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <div class="section-tag" style="margin-bottom:1.25rem;">Sports achievements</div>
+    <div class="ach-grid">
+      <div class="ach-card"><div class="ach-icon">🏃</div><div><div class="ach-title">Athlete</div><div class="ach-sub">Track & field competitor · Department & college-level events</div></div></div>
+      <div class="ach-card"><div class="ach-icon">🏐</div><div><div class="ach-title">Volleyball Player</div><div class="ach-sub">Represented AI & DS Dept · Inter-department tournaments</div></div></div>
+      <div class="ach-card"><div class="ach-icon">🧘</div><div><div class="ach-title">Yoga Champion</div><div class="ach-sub">Recognized for excellence in yoga at college level</div></div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="section-tag">08 — Certifications</div>
+  <h2 class="section-title">NPTEL Certified</h2>
+  <div class="cert-grid fade-in">
+    <div class="cert-item"><div class="cert-dot"></div>Technical English for Engineers</div>
+    <div class="cert-item"><div class="cert-dot"></div>E-Business</div>
+    <div class="cert-item"><div class="cert-dot"></div>Responsible & Safe AI Systems</div>
+    <div class="cert-item"><div class="cert-dot"></div>Introduction to Internet of Things</div>
+    <div class="cert-item"><div class="cert-dot"></div>Industry 4.0 & Industrial IoT</div>
+    <div class="cert-item"><div class="cert-dot"></div>Cloud Computing</div>
+    <div class="cert-item"><div class="cert-dot"></div>Business Intelligence & Analytics</div>
+    <div class="cert-item"><div class="cert-dot"></div>IoT-Driven Robotics & Automation</div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="section-tag">09 — Leadership</div>
+  <h2 class="section-title">Positions of responsibility</h2>
+  <div class="lead-grid fade-in">
+    <div class="lead-card"><div class="lead-role">Joint Secretary</div><div class="lead-org">AI & DS Association</div><div class="lead-year">2025 – Present</div></div>
+    <div class="lead-card"><div class="lead-role">Chief Editor</div><div class="lead-org">AI Club</div><div class="lead-year">2025 – Present</div></div>
+    <div class="lead-card"><div class="lead-role">Secretary</div><div class="lead-org">NEC Sports Club</div><div class="lead-year">2025 – Present</div></div>
+    <div class="lead-card"><div class="lead-role">Sports Captain</div><div class="lead-org">AI & DS Department</div><div class="lead-year">2025 – Present</div></div>
+    <div class="lead-card"><div class="lead-role">Editor</div><div class="lead-org">AI & DS Association</div><div class="lead-year">2024 – 2025</div></div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">10 — Contact</div>
+  <h2 class="section-title">Let's connect</h2>
+  <div class="fade-in">
+    <p style="color:var(--muted);margin-bottom:2rem;line-height:1.8;max-width:560px;">I'm open to collaborations, research opportunities, internships, and interesting conversations about AI. Feel free to reach out!</p>
+    <div class="contact-links" style="max-width:560px;">
+      <a class="contact-link" href="mailto:avanthikasamy6@gmail.com">
+        <span class="contact-link-icon">✉</span>
+        <div><div class="contact-link-label">Email</div><div class="contact-link-text">avanthikasamy6@gmail.com</div></div>
+      </a>
+      <a class="contact-link" href="https://linkedin.com/in/avanthika-n" target="_blank">
+        <span class="contact-link-icon">in</span>
+        <div><div class="contact-link-label">LinkedIn</div><div class="contact-link-text">avanthika-n</div></div>
+      </a>
+      <a class="contact-link" href="https://github.com/avanthikasam26" target="_blank">
+        <span class="contact-link-icon">⌥</span>
+        <div><div class="contact-link-label">GitHub</div><div class="contact-link-text">avanthikasam26</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="margin-bottom:0.5rem;">Designed & built with ♥ — Avanthika N · 2026</div>
+  <div style="color:var(--border);">B.Tech AI & DS · National Engineering College · Tamil Nadu</div>
+</footer>
+
+<script>
+// THEME
+function toggleTheme(){
+  const html=document.documentElement;
+  const dark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',dark?'light':'dark');
+  document.querySelector('.theme-toggle').textContent=dark?'🌙 Dark':'☀ Light';
+}
+
+// PARTICLES
+const canvas=document.getElementById('particle-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+resize();window.addEventListener('resize',()=>{resize();init();});
+function Particle(){
+  this.x=Math.random()*W;this.y=Math.random()*H;
+  this.vx=(Math.random()-0.5)*0.4;this.vy=(Math.random()-0.5)*0.4;
+  this.r=Math.random()*1.5+0.5;this.a=Math.random();
+}
+function init(){particles=[];for(let i=0;i<120;i++)particles.push(new Particle());}
+init();
+let mx=W/2,my=H/2;
+canvas.addEventListener('mousemove',e=>{mx=e.offsetX;my=e.offsetY;});
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const col=isDark?'99,179,237':'37,99,235';
+  particles.forEach(p=>{
+    p.x+=p.vx+(mx-W/2)*0.00015;p.y+=p.vy+(my-H/2)*0.00015;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${col},${p.a*0.7})`;ctx.fill();
+  });
+  particles.forEach((a,i)=>{
+    particles.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(${col},${(1-d/120)*0.15})`;ctx.lineWidth=0.5;ctx.stroke();}
+    });
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// SCROLL ANIMATIONS
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');
+  e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';});}})},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+</script>
+</body>
+</html>
